@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlockShop | Blockchain-Powered E-Commerce</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Variables */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #0f172a;
+      --accent: #22d3ee;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --success: #10b981;
+      --border-radius: 12px;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f5f9;
+      color: var(--secondary);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button, .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo i {
+      color: var(--accent);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      font-weight: 500;
+      padding: 5px 0;
+      position: relative;
+    }
+
+    nav a:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: var(--transition);
+    }
+
+    nav a:hover:after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      display: flex;
+      background: white;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .search-bar input {
+      border: none;
+      padding: 8px 15px;
+      outline: none;
+      width: 200px;
+    }
+
+    .search-bar button {
+      background: var(--secondary);
+      color: white;
+      padding: 8px 15px;
+    }
+
+    .cart-icon {
+      position: relative;
+      font-size: 1.2rem;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--accent);
+      color: var(--secondary);
+      font-size: 0.7rem;
+      font-weight: bold;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1607082350899-7e105aa886ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 50px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--secondary);
+    }
+
+    .btn-primary:hover {
+      background: #06b6d4;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(34, 211, 238, 0.3);
+    }
+
+    .btn-outline {
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .btn-outline:hover {
+      background: white;
+      color: var(--secondary);
+    }
+
+    /* Features */
+    .features {
+      padding: 60px 0;
+      background: white;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: 30px 20px;
+      border-radius: var(--border-radius);
+      background: var(--light);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 15px;
+    }
+
+    /* Products */
+    .products-section {
+      padding: 60px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+      font-size: 2.2rem;
+      color: var(--secondary);
+      margin-bottom: 15px;
+    }
+
+    .section-header p {
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      background: var(--gray-light);
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: var(--success);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-info h3 {
+      margin-bottom: 10px;
+    }
+
+    .product-description {
+      color: var(--gray);
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+
+    .product-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .add-to-cart {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .add-to-cart:hover {
+      background: var(--primary-dark);
+    }
+
+    .wishlist {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-light);
+      color: var(--gray);
+      border-radius: 50%;
+    }
+
+    .wishlist:hover {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    /* Blockchain Features */
+    .blockchain-features {
+      padding: 80px 0;
+      background: linear-gradient(to right, var(--secondary), #1e293b);
+      color: white;
+    }
+
+    .blockchain-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .blockchain-text h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .blockchain-text p {
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    .feature-list {
+      margin-top: 30px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(34, 211, 238, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .blockchain-visual {
+      position: relative;
+    }
+
+    .visual-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .visual-card h3 {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .visual-card p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .card-1 {
+      position: relative;
+      z-index: 3;
+    }
+
+    .card-2 {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      z-index: 2;
+      opacity: 0.7;
+      width: calc(100% - 30px);
+    }
+
+    .card-3 {
+      position: absolute;
+      top: 60px;
+      left: 60px;
+      z-index: 1;
+      opacity: 0.5;
+      width: calc(100% - 60px);
+    }
+
+    /* Newsletter */
+    .newsletter {
+      padding: 80px 0;
+      background: var(--light);
+      text-align: center;
+    }
+
+    .newsletter h2 {
+      margin-bottom: 20px;
+    }
+
+    .newsletter p {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      color: var(--gray);
+    }
+
+    .newsletter-form {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 12px 20px;
+      border: 1px solid var(--gray-light);
+      border-radius: 50px;
+      outline: none;
+    }
+
+    .newsletter-form button {
+      background: var(--primary);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 500;
+    }
+
+    .newsletter-form button:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--secondary);
+      color: white;
+      padding: 60px 0 30px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-column h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-column h3:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .footer-column ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-column a {
+      opacity: 0.8;
+      transition: var(--transition);
+    }
+
+    .footer-column a:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--accent);
+      color: var(--secondary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .blockchain-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .blockchain-visual {
+        margin-top: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      nav ul {
+        gap: 15px;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .btn {
+        display: block;
+        margin: 10px auto;
+        width: max-content;
+      }
+      
+      .visual-card {
+        position: relative !important;
+        margin-bottom: 20px;
+        width: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .search-bar {
+        display: none;
+      }
+      
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .newsletter-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-cube"></i>
+        <span>BlockShop</span>
+      </div>
+      
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      
+      <div class="header-actions">
+        <div class="search-bar">
+          <input type="text" placeholder="Search products...">
+          <button><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count">3</span>
+        </div>
+        
+        <button class="btn" style="background: transparent; color: white;">
+          <i class="fas fa-user"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>Revolutionizing E-Commerce with Blockchain</h1>
+      <p>Experience secure, transparent, and decentralized shopping with cutting-edge blockchain technology. Every transaction is immutable, verifiable, and secure by design.</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn btn-primary">Shop Now</a>
+        <a href="#" class="btn btn-outline">Learn More</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Choose BlockShop?</h2>
+        <p>We leverage blockchain technology to provide a shopping experience like no other</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Enhanced Security</h3>
+          <p>Blockchain encryption ensures your data and transactions are completely secure</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <h3>Transparent Transactions</h3>
+          <p>Every purchase is recorded on an immutable public ledger for complete transparency</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Instant Verification</h3>
+          <p>Product authenticity and transaction validity are verified in real-time</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3>Decentralized Marketplace</h3>
+          <p>Shop without intermediaries for better prices and direct seller relationships</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Products -->
+  <section class="products-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Featured Products</h2>
+        <p>Discover our curated selection of premium products with blockchain-verified authenticity</p>
+      </div>
+      
+      <div class="filters">
+        <button class="filter-btn active">All Products</button>
+        <button class="filter-btn">Electronics</button>
+        <button class="filter-btn">Fashion</button>
+        <button class="filter-btn">Home & Living</button>
+        <button class="filter-btn">Blockchain Verified</button>
+      </div>
+      
+      <div class="products-grid">
+        <!-- Product 1 -->
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Wireless Headphones">
+            <span class="product-badge">Blockchain Verified</span>
+          </div>
+          <div class="product-info">
+            <h3>Premium Wireless Headphones</h3>
+            <p class="product-description">Noise-cancelling wireless headphones with 30-hour battery life</p>
+            <div class="product-price">$249.99</div>
+            <div class="product-actions">
+              <a href="#" class="add-to-cart">Add to Cart</a>
+              <a href="#" class="wishlist"><i class="far fa-heart"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product 2 -->
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Smart Watch">
+            <span class="product-badge">Trending</span>
+          </div>
+          <div class="product-info">
+            <h3>Smart Fitness Watch</h3>
+            <p class="product-description">Track your health metrics with this advanced smartwatch</p>
+            <div class="product-price">$199.99</div>
+            <div class="product-actions">
+              <a href="#" class="add-to-cart">Add to Cart</a>
+              <a href="#" class="wishlist"><i class="far fa-heart"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product 3 -->
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Gaming Laptop">
+            <span class="product-badge">Blockchain Verified</span>
+          </div>
+          <div class="product-info">
+            <h3>High-Performance Laptop</h3>
+            <p class="product-description">Powerful laptop for gaming and professional work</p>
+            <div class="product-price">$1599.99</div>
+            <div class="product-actions">
+              <a href="#" class="add-to-cart">Add to Cart</a>
+              <a href="#" class="wishlist"><i class="far fa-heart"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product 4 -->
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tablet">
+          </div>
+          <div class="product-info">
+            <h3>Ultra-Thin Tablet</h3>
+            <p class="product-description">Perfect for work and entertainment on the go</p>
+            <div class="product-price">$799.99</div>
+            <div class="product-actions">
+              <a href="#" class="add-to-cart">Add to Cart</a>
+              <a href="#" class="wishlist"><i class="far fa-heart"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Blockchain Features -->
+  <section class="blockchain-features">
+    <div class="container">
+      <div class="blockchain-content">
+        <div class="blockchain-text">
+          <h2>How Blockchain Transforms Shopping</h2>
+          <p>Our platform utilizes distributed ledger technology to create a revolutionary shopping experience that benefits both buyers and sellers.</p>
+          
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-fingerprint"></i>
+              </div>
+              <div>
+                <h3>Provenance Tracking</h3>
+                <p>Trace the entire history of products from manufacture to delivery</p>
+              </div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-file-contract"></i>
+              </div>
+              <div>
+                <h3>Smart Contracts</h3>
+                <p>Automated, self-executing contracts ensure terms are always met</p>
+              </div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-lock"></i>
+              </div>
+              <div>
+                <h3>Fraud Prevention</h3>
+                <p>Immutable records make counterfeit products and fraud virtually impossible</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="blockchain-visual">
+          <div class="visual-card card-1">
+            <h3><i class="fas fa-link"></i> Transaction Block #39281</h3>
+            <p>This purchase was recorded on the blockchain on August 15, 2023 at 14:32 GMT. The record includes product details, seller information, and buyer confirmation.</p>
+          </div>
+          
+          <div class="visual-card card-2">
+            <h3><i class="fas fa-link"></i> Transaction Block #39280</h3>
+            <p>Previous block in the chain containing shipment verification and delivery confirmation.</p>
+          </div>
+          
+          <div class="visual-card card-3">
+            <h3><i class="fas fa-link"></i> Transaction Block #39279</h3>
+            <p>Manufacturing and quality assurance data for the purchased product.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Newsletter -->
+  <section class="newsletter">
+    <div class="container">
+      <h2>Stay Updated with BlockShop</h2>
+      <p>Subscribe to our newsletter to receive updates on new products, blockchain features, and exclusive offers.</p>
+      
+      <form class="newsletter-form">
+        <input type="email" placeholder="Your email address">
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>BlockShop</h3>
+          <p>The future of e-commerce powered by blockchain technology for secure, transparent transactions.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Shop</h3>
+          <ul>
+            <li><a href="#">All Products</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#">Fashion</a></li>
+            <li><a href="#">Home & Living</a></li>
+            <li><a href="#">Blockchain Verified</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Our Technology</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2023 BlockShop. All rights reserved. Built with blockchain technology.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simple cart functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const addToCartButtons = document.querySelectorAll('.add-to-cart');
+      const cartCount = document.querySelector('.cart-count');
+      let count = 3; // Starting count
+      
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          count++;
+          cartCount.textContent = count;
+          
+          // Animation effect
+          cartCount.classList.add('pulse');
+          setTimeout(() => {
+            cartCount.classList.remove('pulse');
+          }, 300);
+        });
+      });
+      
+      // Filter buttons
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

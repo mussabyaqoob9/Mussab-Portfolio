@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Interior Design App | Portfolio Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #2a9d8f;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: #ffd166;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffd166;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="white" opacity="0.2"/><path d="M0 0L100 100" stroke="white" stroke-width="2" opacity="0.2"/><path d="M100 0L0 100" stroke="white" stroke-width="2" opacity="0.2"/></svg>');
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            color: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-img {
+            height: 200px;
+            background: linear-gradient(45deg, #3a86ff, #8338ec);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        .feature-content {
+            padding: 1.5rem;
+        }
+
+        .feature-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--secondary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .demo {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(45deg, #3a86ff, #8338ec);
+            border-radius: 40px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .screen-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .screen-content h3 {
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .screen-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .app-btn {
+            padding: 8px 15px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .ar-demo {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+            height: 400px;
+            background: linear-gradient(45deg, #f5f7fa, #c3cfe2);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ar-placeholder {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.9);
+            transition: opacity 0.5s ease;
+        }
+
+        .ar-placeholder:hover {
+            opacity: 0;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            width: 300px;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .tech-item i {
+            font-size: 2.5rem;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .tech-details h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .tech-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .testimonials {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .author-details h4 {
+            color: var(--secondary);
+        }
+
+        .author-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .faq {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 15px;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            margin: 4rem 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-column h3 {
+            color: #ffd166;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            transition: background 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .demo-container {
+                flex-direction: column;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-vr-cardboard"></i>
+                <span>AR Interior Design</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Transform Your Space with AR</h1>
+            <p>Visualize furniture in your home before buying with our augmented reality interior design app</p>
+            <div>
+                <a href="#demo" class="btn">See Demo</a>
+                <a href="#download" class="btn btn-outline">Download App</a>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-img">
+                        <i class="fas fa-couch"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Realistic 3D Models</h3>
+                        <p>Browse through thousands of furniture items from popular brands and see them in photorealistic quality in your space. Our advanced rendering technology ensures accurate lighting and shadows.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img">
+                        <i class="fas fa-ruler-combined"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Precise Measurements</h3>
+                        <p>Our AR technology accurately measures your space to ensure perfect fit for any furniture item you're considering. Avoid costly returns by verifying dimensions before purchase.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Direct Purchasing</h3>
+                        <p>Found the perfect piece? Buy it directly through our app with trusted retail partners. We've partnered with leading furniture brands to bring you exclusive discounts.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Style Matching</h3>
+                        <p>Our AI algorithm suggests furniture that matches your existing decor style. Whether you prefer modern, traditional, or eclectic designs, we'll help you find perfect matches.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Collaborate & Share</h3>
+                        <p>Share your designs with family, friends, or professional interior designers. Get feedback and make decisions together in real-time, no matter where you are.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-img">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Design History</h3>
+                        <p>Save all your design experiments and revisit them anytime. Compare different layouts and furniture arrangements to make the best decision for your space.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Furniture Items</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">95%</div>
+                <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4.8/5</div>
+                <div class="stat-label">App Rating</div>
+            </div>
+        </section>
+
+        <section id="demo" class="demo">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="demo-container">
+                <div class="phone-mockup">
+                    <div class="screen">
+                        <div class="screen-content">
+                            <h3>AR Interior Design App</h3>
+                            <p>Scan your room and start designing</p>
+                            <div class="app-buttons">
+                                <span class="app-btn">Living Room</span>
+                                <span class="app-btn">Bedroom</span>
+                                <span class="app-btn">Office</span>
+                            </div>
+                            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='200' height='200' fill='%233a86ff' opacity='0.2'/><path d='M80,40 L120,40 L120,80 L160,80 L160,120 L120,120 L120,160 L80,160 L80,120 L40,120 L40,80 L80,80 Z' fill='none' stroke='%233a86ff' stroke-width='5'/></svg>" alt="Room layout" style="width: 100%; margin-top: 20px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="ar-demo">
+                    <div class="ar-placeholder">
+                        <i class="fas fa-vr-cardboard" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Move your device around to activate AR</p>
+                    </div>
+                    <p style="font-size: 1rem; text-align: center; padding: 1rem;">Point your device to see furniture in your space. Our AR technology places virtual furniture in your room with realistic dimensions and appearance.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="technology">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div class="tech-details">
+                        <h3>ARKit & ARCore</h3>
+                        <p>For cross-platform AR experiences with advanced surface detection and environmental understanding.</p>
+                    </div>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-code"></i>
+                    <div class="tech-details">
+                        <h3>Unity3D Engine</h3>
+                        <p>For high-quality 3D rendering, realistic lighting, and seamless scene management.</p>
+                    </div>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-cloud"></i>
+                    <div class="tech-details">
+                        <h3>Cloud API</h3>
+                        <p>For accessing our extensive furniture catalog and securely storing user data and designs.</p>
+                    </div>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-brain"></i>
+                    <div class="tech-details">
+                        <h3>Machine Learning</h3>
+                        <p>For style recognition, furniture recommendations, and accurate size predictions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="testimonials">
+            <h2 class="section-title">What Our Users Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "This app saved me from making a huge mistake. I was about to buy a sofa that wouldn't fit in my living room. The AR measurement feature showed me exactly how it would look!"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SD</div>
+                        <div class="author-details">
+                            <h4>Sarah Johnson</h4>
+                            <p>Homeowner</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "As an interior designer, this app has become an essential tool in my workflow. I can show clients exactly how their space will look before making any purchases."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MR</div>
+                        <div class="author-details">
+                            <h4>Michael Rodriguez</h4>
+                            <p>Professional Designer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "The realistic rendering surprised me! I could see how light changes throughout the day would affect the colors of the furniture. Incredible attention to detail."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">EJ</div>
+                        <div class="author-details">
+                            <h4>Emily Jackson</h4>
+                            <p>Architect</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="faq">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What devices are compatible with the app?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Our app is compatible with iOS devices running iOS 13+ (iPhone 6s or newer) and Android devices with ARCore support (most devices from 2017 onward). For the best experience, we recommend using devices with newer processors and more RAM.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How accurate are the measurements?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Our AR measurement technology is accurate to within 1-2% when used correctly. For best results, ensure good lighting and move your device slowly when scanning your room. We recommend double-checking critical measurements before making purchase decisions.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is my data and privacy protected?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely. We take privacy seriously. Your room scans are stored locally on your device unless you choose to back them up to our secure cloud service. We never share your personal data or room layouts with third parties without your explicit permission.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I use the app without internet access?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Basic AR functionality works offline once the app is installed. However, browsing new furniture items, making purchases, and syncing across devices requires an internet connection. We recommend downloading your favorite items beforehand if you know you'll be without internet.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="download" class="cta-section">
+            <h2>Ready to Transform Your Space?</h2>
+            <p>Download our app today and start designing your dream home with confidence. Available on both iOS and Android platforms.</p>
+            <div>
+                <a href="#" class="btn" style="background: white; color: var(--primary);">App Store</a>
+                <a href="#" class="btn btn-outline" style="border-color: white; color: white;">Google Play</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>AR Interior Design</h3>
+                <p>Transforming how people design and visualize their living spaces through augmented reality technology.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#technology">Technology</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Design Street, Creative City</li>
+                    <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@arinteriordesign.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2023 AR Interior Design App. All rights reserved. | Portfolio Project</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+                const icon = question.querySelector('i');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+        });
+
+        // Mobile menu toggle (simplified version)
+        document.querySelector('.mobile-menu').addEventListener('click', () => {
+            alert('Mobile menu would open here. In a real implementation, this would show a navigation drawer.');
+        });
+    </script>
+</body>
+</html>
