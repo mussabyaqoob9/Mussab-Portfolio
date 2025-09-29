@@ -35,7 +35,7 @@
         }
 
         .container {
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -211,6 +211,134 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
 
+        /* Download CV Button Styles - Responsive */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            background: transparent;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+            margin-left: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            min-height: 54px;
+        }
+
+        .btn-download i {
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+            font-size: 18px;
+        }
+
+        .btn-download:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .btn-download:hover:before {
+            left: 0;
+        }
+
+        .btn-download:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-download:hover i {
+            transform: translateY(-2px);
+        }
+
+        /* Download animation */
+        @keyframes downloadPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 138, 0, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 138, 0, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 138, 0, 0);
+            }
+        }
+
+        .btn-download.pulse {
+            animation: downloadPulse 2s infinite;
+        }
+
+        /* Hero buttons container */
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Download success animation */
+        .download-success {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 12, 41, 0.95);
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            text-align: center;
+            display: none;
+            border: 2px solid var(--accent);
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .download-success.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .download-success i {
+            font-size: 50px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .download-success h3 {
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .download-success p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .download-success .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
         /* 3D Sphere */
         .sphere {
             position: absolute;
@@ -330,8 +458,8 @@
 
         .about-text {
             flex: 1;
-            max-width: 100%;
-            padding-left: 40px;
+            min-width: 300px;
+            padding-right: 40px;
         }
 
         .about-text h3 {
@@ -429,14 +557,10 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
-
             max-width: 1200px;
-            /* adjust as needed */
             margin: 0 auto;
-            /* centers the grid container */
             padding: 20px;
         }
-
 
         .project {
             background: var(--card-bg);
@@ -477,19 +601,18 @@
         .contact-content {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-between;
         }
 
         .contact-info {
             flex: 1;
             min-width: 300px;
-            margin-left: 20%;
-            
+            padding-right: 40px;
         }
 
         .contact-form {
             flex: 1;
             min-width: 300px;
-            margin-right: 20%;
         }
 
         .info-item {
@@ -606,7 +729,20 @@
             pointer-events: none;
         }
 
-        /* Media Queries */
+        /* Media Queries for Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 100%;
+                padding: 0 30px;
+            }
+            
+            .sphere {
+                width: 350px;
+                height: 350px;
+                right: 5%;
+            }
+        }
+
         @media (max-width: 992px) {
             .hero h1 {
                 font-size: 50px;
@@ -615,7 +751,15 @@
             .sphere {
                 width: 300px;
                 height: 300px;
-                right: 5%;
+                right: 3%;
+            }
+            
+            .about-text {
+                padding-right: 20px;
+            }
+            
+            .contact-info {
+                padding-right: 20px;
             }
         }
 
@@ -660,9 +804,39 @@
                 padding-right: 0;
                 margin-bottom: 30px;
             }
+            
+            .contact-info {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
 
             .section {
                 padding: 80px 0;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn-download {
+                margin-left: 0;
+                margin-top: 15px;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .download-success {
+                width: 90%;
+                padding: 20px;
+            }
+            
+            .download-success h3 {
+                font-size: 20px;
+            }
+            
+            .download-success i {
+                font-size: 40px;
             }
         }
 
@@ -687,6 +861,59 @@
             .skill i {
                 font-size: 40px;
             }
+            
+            .btn, .btn-download {
+                padding: 12px 25px;
+                font-size: 14px;
+                min-height: 48px;
+            }
+            
+            .btn-download i {
+                font-size: 16px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 10px;
+            }
+            
+            .about-text, .contact-info {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .btn, .btn-download {
+                width: 100%;
+                max-width: none;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .hero-buttons {
+                width: 100%;
+            }
+            
+            .download-success {
+                padding: 15px;
+            }
+            
+            .download-success h3 {
+                font-size: 18px;
+            }
+            
+            .download-success p {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -700,6 +927,14 @@
 <body>
     <!-- 3D Particle Canvas -->
     <canvas id="particle-canvas"></canvas>
+
+    <!-- Download Success Modal -->
+    <div class="download-success" id="downloadSuccess">
+        <i class="fas fa-check-circle"></i>
+        <h3>Download Complete!</h3>
+        <p>Thank you for downloading my CV. I look forward to connecting with you.</p>
+        <button class="btn" onclick="closeDownloadSuccess()">Continue</button>
+    </div>
 
     <!-- Header & Navigation -->
     <header>
@@ -728,7 +963,12 @@
                     <h1>Mussab <span>Yaqoob</span></h1>
                     <p>Creative Developer & Digital Designer with a passion for creating immersive digital experiences
                         that blend technology and art.</p>
-                    <a href="#contact" class="btn" onclick="showPage('contact')">Get In Touch</a>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn" onclick="showPage('contact')">Get In Touch</a>
+                        <a href="#" class="btn-download pulse" onclick="downloadCV()">
+                            <i class="fas fa-download"></i> Download CV
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -754,7 +994,7 @@
     <!-- About Page -->
     <div id="about" class="page">
         <section class="section about">
-            <div class="about">
+            <div class="container">
                 <h2 class="section-title">About Me</h2>
                 <div class="about-content">
                     <div class="about-text">
@@ -769,8 +1009,9 @@
                             <i class="fas fa-graduation-cap"></i>
                             <span>BS Robotics, Superior University</span>
                         </div>
-                        <div class="info-item">
-                        </div>
+                        <a href="#" class="btn-download" onclick="downloadCV()" style="margin-top: 20px;">
+                            <i class="fas fa-download"></i> Download CV
+                        </a>
                     </div>
                     <div class="about-image">
                         <div class="about-image-inner">
@@ -831,16 +1072,16 @@
                             <i class="fas fa-database"></i>
                             <h3>Node.js, Python, MongoDB, PostgreSQL</h3>
                         </div>
-
                     </div>
                 </div>
+            </div>
         </section>
     </div>
 
     <!-- Projects Page -->
     <div id="projects" class="page">
         <section class="section projects">
-            <div class="projects">
+            <div class="container">
                 <h2 class="section-title">Featured Projects</h2>
                 <div class="projects-grid">
                     <div class="project">
@@ -903,7 +1144,7 @@
     <!-- Contact Page -->
     <div id="contact" class="page">
         <section class="section contact">
-            <div class="contact">
+            <div class="container">
                 <h2 class="section-title">Get In Touch</h2>
                 <div class="contact-content">
                     <div class="contact-info">
@@ -923,7 +1164,9 @@
                             <i class="fas fa-clock"></i>
                             <span>Always available — 24/7 service</span>
                         </div>
-
+                        <a href="#" class="btn-download" onclick="downloadCV()" style="margin-top: 20px;">
+                            <i class="fas fa-download"></i> Download CV
+                        </a>
                     </div>
                     <div class="contact-form">
                         <form id="contact-form">
@@ -942,7 +1185,6 @@
                             <button type="submit" class="btn">Send Message</button>
                         </form>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -958,8 +1200,6 @@
                 <!-- WhatsApp Link -->
                 <a href="https://wa.me/message/HSRAATHOY5F4M1" target="_blank"><i class="fab fa-whatsapp"></i>
                 </a>
-
-
             </div>
 
             <p>&copy; 2024 Mussab Yaqoob. All Rights Reserved.</p>
@@ -1113,7 +1353,7 @@
         // Initialize particles when the page loads
         window.addEventListener('load', initParticles);
 
-
+        // EmailJS Contact Form
         document.getElementById("contact-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -1124,7 +1364,127 @@
                     alert("❌ Failed to send message. Error: " + JSON.stringify(error));
                 });
         });
-    </script>
+
+        // Download CV Function - Fixed Implementation
+        function downloadCV() {
+            // Create a temporary link element
+            const link = document.createElement('a');
+            
+            // Create a sample CV content (in a real scenario, this would be your actual CV file)
+            const cvContent = `
+MUSSAB YAQOOB
+Creative Developer & Digital Designer
+
+CONTACT
+Email: mussabyaqoob9@gmail.com
+Phone: +92 319 7151 553
+Location: Shahdara Lahore, Pakistan
+LinkedIn: linkedin.com/in/mussab-yaqoob
+GitHub: github.com/mussabyaqoob9
+
+PROFESSIONAL SUMMARY
+Creative Developer and Digital Designer with 5+ years of experience creating immersive digital experiences. Specialized in blending technology and art to deliver functional and visually stunning solutions. Passionate about continuous learning and pushing the boundaries of digital innovation.
+
+EDUCATION
+BS Robotics - Superior University
+
+TECHNICAL SKILLS
+• Web Development: HTML, CSS, JavaScript, React, Node.js
+• UI/UX Design: Figma, Adobe XD, User Research, Wireframing
+• App Development: iOS, Android, React Native, Flutter
+• Backend Development: Node.js, Python, MongoDB, PostgreSQL
+
+PROJECTS
+• Luxury E-Commerce Platform - Premium shopping experience with 3D product visualization
+• Interactive Portfolio Design - Innovative website with WebGL animations
+• Point of Sale System - Complete transaction platform with ML insights
+• AR Interior Design App - Augmented reality furniture visualization
+• Health & Wellness Tracker - Comprehensive health monitoring system
+
+CERTIFICATIONS
+• Advanced Web Development Certification
+• UI/UX Design Specialization
+• Mobile App Development Certification
+
+LANGUAGES
+• English (Fluent)
+• Urdu (Native)
+
+            `;
+            
+            // Create a Blob with the CV content
+            const blob = new Blob([cvContent], { type: 'text/plain' });
+            
+            // Create a URL for the Blob
+            const url = URL.createObjectURL(blob);
+            
+            // Set the link's href to the Blob URL
+            link.href = url;
+            
+            // Set the download attribute with the desired filename
+            link.download = 'Mussab_Yaqoob_CV.txt';
+            
+            // Append to the body, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Clean up the URL object
+            URL.revokeObjectURL(url);
+            
+            // Show download success message
+            showDownloadSuccess();
+        }
+
+        // Alternative download function for PDF (if you have an actual PDF file)
+        function downloadPDFCV() {
+            // If you have an actual PDF file, use this function instead
+            const link = document.createElement('a');
+            
+            // Replace this URL with the actual path to your CV PDF file
+            link.href = 'Mussab_Yaqoob_CV.pdf'; // Update this path to your actual PDF
+            
+            // Set the download attribute with the desired filename
+            link.download = 'Mussab_Yaqoob_CV.pdf';
+            
+            // Append to the body, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show download success message
+            showDownloadSuccess();
+        }
+
+        // Show download success message
+        function showDownloadSuccess() {
+            const successModal = document.getElementById('downloadSuccess');
+            successModal.classList.add('show');
+            
+            // Add overlay
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'rgba(0,0,0,0.7)';
+            overlay.style.zIndex = '1999';
+            overlay.id = 'downloadOverlay';
+            overlay.onclick = closeDownloadSuccess;
+            document.body.appendChild(overlay);
+        }
+
+        // Close download success message
+        function closeDownloadSuccess() {
+            const successModal = document.getElementById('downloadSuccess');
+            successModal.classList.remove('show');
+            
+            const overlay = document.getElementById('downloadOverlay');
+            if (overlay) {
+                document.body.removeChild(overlay);
+            }
+        }
     </script>
 </body>
 
