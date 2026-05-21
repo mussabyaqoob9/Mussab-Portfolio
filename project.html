@@ -1,266 +1,1024 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Interactive Portfolio — Project</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(180deg, #f8fafc, #eef2ff);
-      color: #0f1724;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-    h1 {
-      margin-top: 0;
-      color: #0f1724;
-    }
-    .btn {
-      padding: 10px 18px;
-      border-radius: 8px;
-      border: none;
-      background: #0f1724;
-      color: white;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-    .btn:hover {
-      background: #1e293b;
-      transform: translateY(-2px);
-    }
-    .btn.ghost {
-      background: transparent;
-      border: 1px solid #ccc;
-      color: #0f1724;
-    }
-    .btn.ghost:hover {
-      background: #f1f5f9;
-    }
-    .project-canvas {
-      height: 400px;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 20px 0;
-      position: relative;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-    .project-canvas.visible {
-      opacity: 1;
-    }
-    .project-info {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid #eee;
-    }
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin: 15px 0;
-    }
-    .loading {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.8);
-      z-index: 10;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #6366f1;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Nexus · Cyberpunk Portfolio</title>
+    <style>
+        :root {
+            --bg-deep: #06060e;
+            --bg-card: rgba(14, 14, 26, 0.75);
+            --border-glow: rgba(0, 255, 255, 0.25);
+            --text-primary: #e0e0f0;
+            --text-secondary: #a0a0c0;
+            --accent-cyan: #00e5ff;
+            --accent-magenta: #ff2d95;
+            --accent-purple: #b347ea;
+            --accent-gold: #ffb347;
+            --glass-blur: 18px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.45s cubic-bezier(0.25, 0, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: crosshair;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Animated grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridShift 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes gridShift {
+            0% {
+                background-position: 0 0, 0 0;
+            }
+            100% {
+                background-position: 40px 40px, -40px 40px;
+            }
+        }
+
+        /* Scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 4px);
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.5;
+        }
+
+        /* Custom cursor trail */
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 0 18px var(--accent-cyan), 0 0 40px rgba(0, 229, 255, 0.5);
+            transition: transform 0.08s ease-out, opacity 0.3s ease;
+            mix-blend-mode: screen;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 30px auto;
+            padding: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Glassmorphism card */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px 30px;
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            box-shadow:
+                0 8px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04),
+                0 0 60px rgba(0, 229, 255, 0.06);
+            position: relative;
+            overflow: visible;
+            transition: box-shadow var(--transition-smooth), border-color var(--transition-smooth);
+        }
+        .card:hover {
+            border-color: rgba(0, 229, 255, 0.5);
+            box-shadow:
+                0 12px 50px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 0 90px rgba(0, 229, 255, 0.12);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 30px;
+            right: 30px;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(0, 229, 255, 0.5),
+                    var(--accent-magenta),
+                    rgba(0, 229, 255, 0.5),
+                    transparent);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+
+        /* Header */
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 229, 255, 0.06);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 rgba(0, 229, 255, 0);
+            }
+            50% {
+                box-shadow: 0 0 22px rgba(0, 229, 255, 0.3);
+            }
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, #c0d0ff 40%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            line-height: 1.1;
+        }
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 6px 0 16px;
+            letter-spacing: 0.02em;
+            font-weight: 400;
+        }
+
+        /* Canvas container */
+        .project-canvas {
+            height: 420px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin: 16px 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 0.8s ease;
+            background: radial-gradient(ellipse at center, rgba(20, 20, 50, 0.9) 0%, rgba(6, 6, 14, 1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.6);
+        }
+        .project-canvas.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .project-canvas canvas {
+            display: block;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            background: rgba(6, 6, 14, 0.9);
+            z-index: 10;
+            transition: opacity 0.5s ease;
+            border-radius: var(--radius-md);
+        }
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .cyber-spinner {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--accent-cyan);
+            border-right-color: var(--accent-magenta);
+            animation: cyberSpin 1.2s linear infinite;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+        }
+        @keyframes cyberSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .loading-text {
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            animation: textFlicker 2s infinite;
+        }
+        @keyframes textFlicker {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin: 14px 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            padding: 11px 22px;
+            border-radius: 26px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(20, 20, 40, 0.7);
+            color: #e0e0f0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.88rem;
+            letter-spacing: 0.03em;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    rgba(0, 229, 255, 0.15),
+                    transparent 60%);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+            border-radius: 26px;
+        }
+        .btn:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+        .btn:hover::after {
+            opacity: 1;
+        }
+        .btn.active-btn {
+            background: rgba(0, 229, 255, 0.15);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 28px rgba(0, 229, 255, 0.35);
+            color: #fff;
+        }
+        .btn.magenta {
+            border-color: rgba(255, 45, 149, 0.4);
+        }
+        .btn.magenta:hover {
+            border-color: var(--accent-magenta);
+            box-shadow: 0 0 30px rgba(255, 45, 149, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        .btn.gold {
+            border-color: rgba(255, 179, 71, 0.4);
+        }
+        .btn.gold:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 30px rgba(255, 179, 71, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Color indicator dots */
+        .color-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+            box-shadow: 0 0 8px currentColor;
+        }
+        .color-dot.cyan {
+            background: #00e5ff;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+        .color-dot.magenta {
+            background: #ff2d95;
+            box-shadow: 0 0 10px #ff2d95;
+        }
+        .color-dot.gold {
+            background: #ffb347;
+            box-shadow: 0 0 10px #ffb347;
+        }
+
+        /* Project info */
+        .project-info {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .project-info h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #d0d0f0;
+            margin-bottom: 8px;
+        }
+        .project-info p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.92rem;
+        }
+        .stat-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            letter-spacing: 0.04em;
+            color: #9090b0;
+        }
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                margin: 12px auto;
+                padding: 10px;
+            }
+            .card {
+                padding: 18px 16px;
+                border-radius: var(--radius-md);
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .project-canvas {
+                height: 280px;
+            }
+            .controls {
+                gap: 8px;
+            }
+            .btn {
+                padding: 9px 15px;
+                font-size: 0.8rem;
+                border-radius: 20px;
+            }
+            .stat-row {
+                gap: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <main class="container">
-    <div class="card">
-      <h1>Interactive Portfolio — Project</h1>
-      <p>This WebGL visualization demonstrates particle physics in a 3D space.</p>
 
-      <div class="controls">
-        <button id="playPauseBtn" class="btn">Pause</button>
-        <button id="changeColorBtn" class="btn ghost">Change Color</button>
-      </div>
+    <!-- Custom cursor trail -->
+    <div class="cursor-trail" id="cursorTrail"></div>
 
-      <div class="project-canvas" id="canvasContainer">
-        <div class="loading" id="loadingIndicator">
-          <div class="spinner"></div>
+    <main class="container">
+        <div class="card">
+            <div class="header-row">
+                <span class="badge">⚡ v3.0 · Live</span>
+                <span class="badge" style="border-color:var(--accent-magenta);color:var(--accent-magenta);background:rgba(255,45,149,0.06);">Cyberpunk</span>
+            </div>
+            <h1>Nexus Particle Engine</h1>
+            <p class="subtitle">A real-time 3D holographic particle system with dynamic force fields and chromatic aberration.</p>
+
+            <div class="controls">
+                <button id="playPauseBtn" class="btn active-btn">▶ Pause</button>
+                <button id="changeColorBtn" class="btn magenta">
+                    <span class="color-dot magenta"></span> Shift Chroma
+                </button>
+                <button id="explodeBtn" class="btn gold">
+                    <span class="color-dot gold"></span> Burst
+                </button>
+                <button id="toggleWireframeBtn" class="btn">🔮 Wireframe</button>
+            </div>
+
+            <div class="project-canvas" id="canvasContainer">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="cyber-spinner"></div>
+                    <span class="loading-text">Initializing Nexus Core...</span>
+                </div>
+            </div>
+
+            <div class="project-info">
+                <h3>🌀 About The Nexus Engine</h3>
+                <p>This visualization renders <strong>3,000+ particles</strong> inside a holographic force field. Particles react to cursor proximity, generating organic flow patterns. The core wireframe icosahedron pulses with energy while orbiting particle rings create a mesmerizing depth effect.</p>
+                <div class="stat-row">
+                    <div class="stat">
+                        <span>Particles:</span>
+                        <span class="stat-value">3,200</span>
+                    </div>
+                    <div class="stat">
+                        <span>FPS:</span>
+                        <span class="stat-value" id="fpsCounter">60</span>
+                    </div>
+                    <div class="stat">
+                        <span>Mode:</span>
+                        <span class="stat-value" id="modeLabel">Active</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </main>
 
-      <div class="project-info">
-        <h3>About This Project</h3>
-        <p>This interactive visualization uses Three.js to create a dynamic particle system that responds to mouse movement.</p>
-      </div>
-    </div>
-  </main>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js">
+    </script>
+    <script>
+        (function() {
+            const canvasContainer = document.getElementById('canvasContainer');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const changeColorBtn = document.getElementById('changeColorBtn');
+            const explodeBtn = document.getElementById('explodeBtn');
+            const toggleWireframeBtn = document.getElementById('toggleWireframeBtn');
+            const cursorTrail = document.getElementById('cursorTrail');
+            const fpsCounter = document.getElementById('fpsCounter');
+            const modeLabel = document.getElementById('modeLabel');
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-  <script>
-    const canvasContainer = document.getElementById('canvasContainer');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const changeColorBtn = document.getElementById('changeColorBtn');
+            // ───────────────────────────────────
+            // State
+            // ───────────────────────────────────
+            let scene, camera, renderer;
+            let mainParticleSystem, coreWireframe, ringSystem;
+            let isPlaying = true;
+            let mouseX = 0,
+                mouseY = 0;
+            let targetMouseX = 0,
+                targetMouseY = 0;
+            let currentColorScheme = 'cyan';
+            let wireframeVisible = false;
+            let explodeForce = 0;
+            let explodeDecay = 0.94;
+            const PARTICLE_COUNT = 3200;
+            const originalPositions = new Float32Array(PARTICLE_COUNT * 3);
+            let frameCount = 0;
+            let lastFpsTime = performance.now();
 
-    let scene, camera, renderer, particleSystem;
-    let isPlaying = true, mouseX = 0, mouseY = 0;
+            // ───────────────────────────────────
+            // Color schemes
+            // ───────────────────────────────────
+            const colorSchemes = {
+                cyan: { r: [0, 0.9, 1], g: [0.5, 1, 1], b: [0.8, 1, 1], accent: '#00e5ff' },
+                magenta: { r: [0.8, 1, 1], g: [0, 0.2, 0.4], b: [0.4, 0.7, 1], accent: '#ff2d95' },
+                gold: { r: [0.9, 1, 1], g: [0.5, 0.8, 1], b: [0, 0.2, 0.5], accent: '#ffb347' },
+                purple: { r: [0.5, 0.8, 1], g: [0, 0.3, 0.6], b: [0.7, 1, 1], accent: '#b347ea' },
+            };
 
-    function initThreeJS() {
-      loadingIndicator.classList.remove('hidden');
-
-      setTimeout(() => {
-        const width = canvasContainer.offsetWidth;
-        const height = canvasContainer.offsetHeight;
-
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 5;
-
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(width, height);
-        renderer.setClearColor(0x000000, 0);
-        canvasContainer.appendChild(renderer.domElement);
-
-        const particleCount = 2000;
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
-
-        for (let i = 0; i < particleCount; i++) {
-          const i3 = i * 3;
-          const radius = 4;
-          const theta = Math.random() * Math.PI * 2;
-          const phi = Math.random() * Math.PI;
-          positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
-          positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-          positions[i3 + 2] = radius * Math.cos(phi);
-          colors[i3] = Math.random();
-          colors[i3 + 1] = Math.random();
-          colors[i3 + 2] = Math.random();
-        }
-
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-        const material = new THREE.ShaderMaterial({
-          vertexShader: `
-            varying vec3 vColor;
-            void main() {
-              vColor = color;
-              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-              gl_PointSize = 5.0;
-              gl_Position = projectionMatrix * mvPosition;
+            function getRandomColor(scheme) {
+                const s = colorSchemes[scheme];
+                const r = s.r[0] + Math.random() * (s.r[2] - s.r[0]);
+                const g = s.g[0] + Math.random() * (s.g[2] - s.g[0]);
+                const b = s.b[0] + Math.random() * (s.b[2] - s.b[0]);
+                return [r, g, b];
             }
-          `,
-          fragmentShader: `
-            varying vec3 vColor;
-            void main() {
-              vec2 cxy = 2.0 * gl_PointCoord - 1.0;
-              if (dot(cxy, cxy) > 1.0) discard;
-              gl_FragColor = vec4(vColor, 1.0);
+
+            // ───────────────────────────────────
+            // Initialize Three.js
+            // ───────────────────────────────────
+            function initThreeJS() {
+                const width = canvasContainer.offsetWidth;
+                const height = canvasContainer.offsetHeight;
+
+                // Scene
+                scene = new THREE.Scene();
+
+                // Camera
+                camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 100);
+                camera.position.z = 7.5;
+
+                // Renderer
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setClearColor(0x000000, 0);
+                canvasContainer.appendChild(renderer.domElement);
+
+                // ── Main particle cloud ─────────────────
+                const positions = new Float32Array(PARTICLE_COUNT * 3);
+                const colors = new Float32Array(PARTICLE_COUNT * 3);
+                const sizes = new Float32Array(PARTICLE_COUNT);
+
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    const i3 = i * 3;
+                    // Spherical distribution with some clumping
+                    const radius = 2.8 + Math.random() * 2.2;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos(2 * Math.random() - 1);
+                    positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+                    positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                    positions[i3 + 2] = radius * Math.cos(phi);
+
+                    // Store original positions for burst reset
+                    originalPositions[i3] = positions[i3];
+                    originalPositions[i3 + 1] = positions[i3 + 1];
+                    originalPositions[i3 + 2] = positions[i3 + 2];
+
+                    const [r, g, b] = getRandomColor('cyan');
+                    colors[i3] = r;
+                    colors[i3 + 1] = g;
+                    colors[i3 + 2] = b;
+                    sizes[i] = Math.random() * 4.5 + 1.2;
+                }
+
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+                // Custom shader material for glowing particles
+                const particleMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        uTime: { value: 0 },
+                        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+                    },
+                    vertexShader: /*glsl*/ `
+                        attribute float size;
+                        varying vec3 vColor;
+                        varying float vSize;
+                        uniform float uTime;
+                        uniform float uPixelRatio;
+                        void main() {
+                          vColor = color;
+                          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                          float dist = length(mvPosition.xyz);
+                          gl_PointSize = size * uPixelRatio * (280.0 / dist);
+                          gl_PointSize = clamp(gl_PointSize, 0.8, 12.0);
+                          gl_Position = projectionMatrix * mvPosition;
+                          vSize = gl_PointSize;
+                        }
+                      `,
+                    fragmentShader: /*glsl*/ `
+                        varying vec3 vColor;
+                        varying float vSize;
+                        void main() {
+                          vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+                          float r = dot(cxy, cxy);
+                          if (r > 1.0) discard;
+                          float alpha = 1.0 - smoothstep(0.0, 1.0, r);
+                          alpha *= 0.85;
+                          float glow = exp(-r * 3.5) * 0.6;
+                          alpha += glow;
+                          alpha = clamp(alpha, 0.0, 1.0);
+                          gl_FragColor = vec4(vColor * (1.0 + glow * 0.7), alpha);
+                        }
+                      `,
+                    vertexColors: true,
+                    blending: THREE.AdditiveBlending,
+                    depthTest: true,
+                    depthWrite: false,
+                    transparent: true,
+                });
+
+                mainParticleSystem = new THREE.Points(geometry, particleMaterial);
+                scene.add(mainParticleSystem);
+
+                // ── Core wireframe icosahedron ─────────────────
+                const icoGeom = new THREE.IcosahedronGeometry(1.6, 2);
+                const wireframeMat = new THREE.MeshBasicMaterial({
+                    color: 0x00e5ff,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.25,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false,
+                });
+                coreWireframe = new THREE.Mesh(icoGeom, wireframeMat);
+                coreWireframe.visible = false;
+                scene.add(coreWireframe);
+
+                // ── Orbiting ring particles ─────────────────
+                const ringCount = 500;
+                const ringPositions = new Float32Array(ringCount * 3);
+                const ringColorsArr = new Float32Array(ringCount * 3);
+                for (let i = 0; i < ringCount; i++) {
+                    const i3 = i * 3;
+                    const angle = (i / ringCount) * Math.PI * 2;
+                    const r = 3.6 + Math.sin(i * 0.3) * 0.5;
+                    ringPositions[i3] = Math.cos(angle) * r;
+                    ringPositions[i3 + 1] = Math.sin(angle) * r;
+                    ringPositions[i3 + 2] = (Math.random() - 0.5) * 0.6;
+                    const [cr, cg, cb] = getRandomColor('cyan');
+                    ringColorsArr[i3] = cr;
+                    ringColorsArr[i3 + 1] = cg;
+                    ringColorsArr[i3 + 2] = cb;
+                }
+                const ringGeom = new THREE.BufferGeometry();
+                ringGeom.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+                ringGeom.setAttribute('color', new THREE.BufferAttribute(ringColorsArr, 3));
+                const ringMat = new THREE.PointsMaterial({
+                    size: 0.06,
+                    vertexColors: true,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false,
+                    transparent: true,
+                    opacity: 0.8,
+                });
+                ringSystem = new THREE.Points(ringGeom, ringMat);
+                scene.add(ringSystem);
+
+                // ── Ambient floating micro-particles ─────────────────
+                const microCount = 200;
+                const microPositions = new Float32Array(microCount * 3);
+                for (let i = 0; i < microCount; i++) {
+                    const i3 = i * 3;
+                    microPositions[i3] = (Math.random() - 0.5) * 10;
+                    microPositions[i3 + 1] = (Math.random() - 0.5) * 10;
+                    microPositions[i3 + 2] = (Math.random() - 0.5) * 10;
+                }
+                const microGeom = new THREE.BufferGeometry();
+                microGeom.setAttribute('position', new THREE.BufferAttribute(microPositions, 3));
+                const microMat = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: 0xffffff,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false,
+                    transparent: true,
+                    opacity: 0.5,
+                });
+                const microSystem = new THREE.Points(microGeom, microMat);
+                microSystem.name = 'microParticles';
+                scene.add(microSystem);
+
+                // ── Event listeners ─────────────────
+                window.addEventListener('resize', onWindowResize);
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('touchmove', onTouchMove, { passive: true });
+
+                // Hide loading
+                setTimeout(() => {
+                    loadingOverlay.classList.add('hidden');
+                    canvasContainer.classList.add('visible');
+                }, 400);
+
+                animate();
             }
-          `,
-          vertexColors: true,
-          blending: THREE.AdditiveBlending,
-          depthTest: false,
-          transparent: true
-        });
 
-        particleSystem = new THREE.Points(geometry, material);
-        scene.add(particleSystem);
+            // ───────────────────────────────────
+            // Event handlers
+            // ───────────────────────────────────
+            function onWindowResize() {
+                const w = canvasContainer.offsetWidth;
+                const h = canvasContainer.offsetHeight;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            }
 
-        window.addEventListener('resize', onWindowResize);
-        document.addEventListener('mousemove', onMouseMove);
+            function onMouseMove(event) {
+                targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
-        loadingIndicator.classList.add('hidden');
-        canvasContainer.classList.add('visible');
+                // Move cursor trail
+                cursorTrail.style.left = event.clientX + 'px';
+                cursorTrail.style.top = event.clientY + 'px';
+                cursorTrail.style.opacity = '1';
+                cursorTrail.style.transform = 'translate(-50%, -50%) scale(1)';
+                clearTimeout(cursorTrail._timeout);
+                cursorTrail._timeout = setTimeout(() => {
+                    cursorTrail.style.opacity = '0';
+                    cursorTrail.style.transform = 'translate(-50%, -50%) scale(0.3)';
+                }, 400);
+            }
 
-        animate();
-      }, 100);
-    }
+            function onTouchMove(event) {
+                if (event.touches.length > 0) {
+                    targetMouseX = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+                    targetMouseY = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+                }
+            }
 
-    function onWindowResize() {
-      camera.aspect = canvasContainer.offsetWidth / canvasContainer.offsetHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
-    }
+            // ───────────────────────────────────
+            // Animation loop
+            // ───────────────────────────────────
+            function animate() {
+                requestAnimationFrame(animate);
 
-    function onMouseMove(event) {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-    }
+                // FPS counter
+                frameCount++;
+                const now = performance.now();
+                if (now - lastFpsTime >= 1000) {
+                    const fps = Math.round(frameCount / ((now - lastFpsTime) / 1000));
+                    fpsCounter.textContent = fps;
+                    frameCount = 0;
+                    lastFpsTime = now;
+                }
 
-    function animate() {
-      requestAnimationFrame(animate);
-      if (!isPlaying || !particleSystem) return;
+                // Smooth mouse interpolation
+                mouseX += (targetMouseX - mouseX) * 0.08;
+                mouseY += (targetMouseY - mouseY) * 0.08;
 
-      const time = Date.now() * 0.001;
-      const positions = particleSystem.geometry.attributes.position.array;
+                const time = Date.now() * 0.001;
 
-      for (let i = 0; i < positions.length; i += 3) {
-        positions[i] += Math.sin(time + positions[i]) * 0.005;
-        positions[i + 1] += Math.cos(time + positions[i + 1]) * 0.005;
-        positions[i + 2] += Math.sin(time + positions[i + 2]) * 0.005;
+                if (isPlaying && mainParticleSystem) {
+                    const positions = mainParticleSystem.geometry.attributes.position.array;
+                    const colors = mainParticleSystem.geometry.attributes.color.array;
 
-        const dx = positions[i] - (mouseX * 5);
-        const dy = positions[i + 1] - (mouseY * 5);
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 2) {
-          positions[i] += dx * 0.05;
-          positions[i + 1] += dy * 0.05;
-        }
-      }
+                    // Decay explosion force
+                    if (explodeForce > 0.001) {
+                        explodeForce *= explodeDecay;
+                    } else {
+                        explodeForce = 0;
+                    }
 
-      particleSystem.geometry.attributes.position.needsUpdate = true;
-      particleSystem.rotation.x += 0.001;
-      particleSystem.rotation.y += 0.002;
-      renderer.render(scene, camera);
-    }
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const ox = originalPositions[i];
+                        const oy = originalPositions[i + 1];
+                        const oz = originalPositions[i + 2];
 
-    function togglePlayPause() {
-      isPlaying = !isPlaying;
-      playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
-    }
+                        // Flow field distortion
+                        const flowX = Math.sin(time * 1.3 + oy * 1.8) * 0.015;
+                        const flowY = Math.cos(time * 1.1 + ox * 1.6) * 0.015;
+                        const flowZ = Math.sin(time * 0.9 + oz * 2.0) * 0.015;
 
-    function changeColors() {
-      if (!particleSystem) return;
-      const colors = particleSystem.geometry.attributes.color.array;
-      for (let i = 0; i < colors.length; i += 3) {
-        colors[i] = Math.random();
-        colors[i + 1] = Math.random();
-        colors[i + 2] = Math.random();
-      }
-      particleSystem.geometry.attributes.color.needsUpdate = true;
-    }
+                        // Mouse attraction/repulsion
+                        const dx = positions[i] - (mouseX * 5);
+                        const dy = positions[i + 1] - (mouseY * 5);
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        let forceX = 0,
+                            forceY = 0;
+                        if (dist < 2.8 && dist > 0.01) {
+                            const strength = (2.8 - dist) / 2.8;
+                            const normX = dx / dist;
+                            const normY = dy / dist;
+                            forceX = normX * strength * 0.06;
+                            forceY = normY * strength * 0.06;
+                        }
 
-    playPauseBtn.addEventListener('click', togglePlayPause);
-    changeColorBtn.addEventListener('click', changeColors);
+                        // Combine forces
+                        positions[i] += flowX + forceX;
+                        positions[i + 1] += flowY + forceY;
+                        positions[i + 2] += flowZ;
 
-    // Initialize Three.js immediately
-    initThreeJS();
-  </script>
+                        // Pull toward original position (elasticity)
+                        const pullStrength = 0.008 + explodeForce * 0.3;
+                        positions[i] += (ox - positions[i]) * pullStrength;
+                        positions[i + 1] += (oy - positions[i + 1]) * pullStrength;
+                        positions[i + 2] += (oz - positions[i + 2]) * pullStrength;
+
+                        // Explosion burst offset
+                        if (explodeForce > 0.001) {
+                            const burstDirX = positions[i] - ox;
+                            const burstDirY = positions[i + 1] - oy;
+                            const burstDirZ = positions[i + 2] - oz;
+                            const bDist = Math.sqrt(burstDirX * burstDirX + burstDirY * burstDirY + burstDirZ *
+                                burstDirZ);
+                            if (bDist < 6) {
+                                const bNorm = bDist > 0.001 ? 1 / bDist : 0;
+                                positions[i] += burstDirX * bNorm * explodeForce * 0.04;
+                                positions[i + 1] += burstDirY * bNorm * explodeForce * 0.04;
+                                positions[i + 2] += burstDirZ * bNorm * explodeForce * 0.04;
+                            }
+                        }
+
+                        // Dynamic color shift based on distance from origin
+                        const cDist = Math.sqrt(
+                            positions[i] * positions[i] +
+                            positions[i + 1] * positions[i + 1] +
+                            positions[i + 2] * positions[i + 2]
+                        );
+                        const colorShift = Math.sin(time * 2 + cDist * 0.5) * 0.3 + 0.7;
+                        colors[i] = Math.min(1, colors[i] * (0.98 + colorShift * 0.02));
+                        colors[i + 1] = Math.min(1, colors[i + 1] * (0.98 + colorShift * 0.02));
+                        colors[i + 2] = Math.min(1, colors[i + 2] * (0.98 + colorShift * 0.02));
+                    }
+
+                    mainParticleSystem.geometry.attributes.position.needsUpdate = true;
+                    mainParticleSystem.geometry.attributes.color.needsUpdate = true;
+                    mainParticleSystem.material.uniforms.uTime.value = time;
+                }
+
+                // Rotate main system
+                if (mainParticleSystem) {
+                    mainParticleSystem.rotation.x += 0.0007;
+                    mainParticleSystem.rotation.y += 0.0012;
+                    mainParticleSystem.rotation.z += 0.0003;
+                }
+
+                // Rotate core wireframe
+                if (coreWireframe && coreWireframe.visible) {
+                    coreWireframe.rotation.x += 0.004;
+                    coreWireframe.rotation.y += 0.006;
+                    coreWireframe.rotation.z += 0.002;
+                    // Pulse scale
+                    const pulse = 1 + Math.sin(time * 3) * 0.08;
+                    coreWireframe.scale.setScalar(pulse);
+                }
+
+                // Rotate ring system
+                if (ringSystem) {
+                    ringSystem.rotation.z += 0.003;
+                    ringSystem.rotation.x += 0.001;
+                }
+
+                // Animate micro particles
+                const microSystem = scene.getObjectByName('microParticles');
+                if (microSystem) {
+                    microSystem.rotation.y += 0.0005;
+                    microSystem.rotation.x += 0.0003;
+                }
+
+                // Camera subtle sway
+                camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.03;
+                camera.position.y += (mouseY * 0.3 - camera.position.y) * 0.03;
+                camera.lookAt(0, 0, 0);
+
+                renderer.render(scene, camera);
+            }
+
+            // ───────────────────────────────────
+            // Button actions
+            // ───────────────────────────────────
+            function togglePlayPause() {
+                isPlaying = !isPlaying;
+                if (isPlaying) {
+                    playPauseBtn.textContent = '▶ Pause';
+                    playPauseBtn.classList.add('active-btn');
+                    modeLabel.textContent = 'Active';
+                } else {
+                    playPauseBtn.textContent = '▶ Play';
+                    playPauseBtn.classList.remove('active-btn');
+                    modeLabel.textContent = 'Frozen';
+                }
+            }
+
+            function changeColors() {
+                const schemes = Object.keys(colorSchemes);
+                const currentIdx = schemes.indexOf(currentColorScheme);
+                const nextIdx = (currentIdx + 1) % schemes.length;
+                currentColorScheme = schemes[nextIdx];
+
+                if (!mainParticleSystem) return;
+                const colors = mainParticleSystem.geometry.attributes.color.array;
+                for (let i = 0; i < colors.length; i += 3) {
+                    const [r, g, b] = getRandomColor(currentColorScheme);
+                    colors[i] = r;
+                    colors[i + 1] = g;
+                    colors[i + 2] = b;
+                }
+                mainParticleSystem.geometry.attributes.color.needsUpdate = true;
+
+                // Update wireframe color
+                const scheme = colorSchemes[currentColorScheme];
+                const hexColor = new THREE.Color(scheme.accent);
+                if (coreWireframe) {
+                    coreWireframe.material.color.set(hexColor);
+                }
+
+                // Update ring colors
+                if (ringSystem) {
+                    const ringColors = ringSystem.geometry.attributes.color.array;
+                    for (let i = 0; i < ringColors.length; i += 3) {
+                        const [r, g, b] = getRandomColor(currentColorScheme);
+                        ringColors[i] = r;
+                        ringColors[i + 1] = g;
+                        ringColors[i + 2] = b;
+                    }
+                    ringSystem.geometry.attributes.color.needsUpdate = true;
+                }
+
+                // Update cursor trail color
+                cursorTrail.style.background = scheme.accent;
+                cursorTrail.style.boxShadow = `0 0 18px ${scheme.accent}, 0 0 40px ${scheme.accent}`;
+
+                // Brief flash feedback
+                changeColorBtn.style.boxShadow = `0 0 35px ${scheme.accent}`;
+                setTimeout(() => {
+                    changeColorBtn.style.boxShadow = '';
+                }, 300);
+            }
+
+            function triggerBurst() {
+                explodeForce = 3.5 + Math.random() * 2;
+                // Briefly scatter particles more
+                if (mainParticleSystem) {
+                    const positions = mainParticleSystem.geometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        positions[i] += (Math.random() - 0.5) * 2.5;
+                        positions[i + 1] += (Math.random() - 0.5) * 2.5;
+                        positions[i + 2] += (Math.random() - 0.5) * 2.5;
+                    }
+                    mainParticleSystem.geometry.attributes.position.needsUpdate = true;
+                }
+                // Flash button
+                explodeBtn.style.boxShadow = '0 0 40px rgba(255,179,71,0.8)';
+                setTimeout(() => {
+                    explodeBtn.style.boxShadow = '';
+                }, 350);
+            }
+
+            function toggleWireframe() {
+                wireframeVisible = !wireframeVisible;
+                if (coreWireframe) {
+                    coreWireframe.visible = wireframeVisible;
+                }
+                if (wireframeVisible) {
+                    toggleWireframeBtn.classList.add('active-btn');
+                    toggleWireframeBtn.textContent = '🔮 Wireframe: ON';
+                } else {
+                    toggleWireframeBtn.classList.remove('active-btn');
+                    toggleWireframeBtn.textContent = '🔮 Wireframe';
+                }
+            }
+
+            // ───────────────────────────────────
+            // Bind buttons
+            // ───────────────────────────────────
+            playPauseBtn.addEventListener('click', togglePlayPause);
+            changeColorBtn.addEventListener('click', changeColors);
+            explodeBtn.addEventListener('click', triggerBurst);
+            toggleWireframeBtn.addEventListener('click', toggleWireframe);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                switch (e.key.toLowerCase()) {
+                    case ' ':
+                        e.preventDefault();
+                        togglePlayPause();
+                        break;
+                    case 'c':
+                        changeColors();
+                        break;
+                    case 'b':
+                        triggerBurst();
+                        break;
+                    case 'w':
+                        toggleWireframe();
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // ───────────────────────────────────
+            // Start
+            // ───────────────────────────────────
+            initThreeJS();
+
+            // Hide cursor trail initially on mobile
+            if ('ontouchstart' in window) {
+                cursorTrail.style.display = 'none';
+            }
+
+            console.log('%c🚀 Nexus Particle Engine v3.0 %cReady',
+                'color: #00e5ff; font-size: 16px; font-weight: bold;',
+                'color: #e0e0f0;');
+            console.log('%c   Controls: Space=Play/Pause | C=Color | B=Burst | W=Wireframe',
+                'color: #9090b0; font-size: 12px;');
+        })();
+    </script>
 </body>
 </html>
